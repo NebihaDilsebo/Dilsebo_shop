@@ -40,8 +40,8 @@ class Sales(db.Model):
     price = db.Column(db.Float)
     total_sale_price = db.Column(db.Float)
 
-@app.route('/submit_Sale', methods=['POST'])
-def submit_Sale():
+@app.route('/submit_sale', methods=['POST'])
+def submit_sale():
     if request.method == 'POST':
         product_id = request.form['product_id']
         customer_id = request.form['customer_id']
@@ -74,26 +74,9 @@ def submit_Sale():
 
             # Convert the sales records to a format you want to display (e.g., JSON)
             sales_data = [{'product_id': sale.product_id, 'customer_id': sale.customer_id, 'sale_date': sale.sale_date.strftime('%Y-%m-%d'), 'quantity_sold': sale.quantity_sold, 'price': sale.price, 'total_sale_price': sale.total_sale_price} for sale in today_sales]
-
-            # Create a Pandas DataFrame from the sales data
-            df = pd.DataFrame(sales_data)
-
-            # Save the DataFrame as an Excel file
-            excel_filename = 'sales_data.xlsx'
-            df.to_excel(excel_filename, index=False)
-
-             # Render an HTML page to display the sales data as a table
-            return render_template('sales_table.html', sales=df.to_html(classes='table table-striped'), title='Today\'s Sales')
-
-
-            return f'Data saved as {excel_filename}', 200
-
-        except ValueError:
-            # Handle invalid input (e.g., non-numeric quantity or price)
-            error_message = "Invalid input. Quantity and price must be numeric."
-            response_data = {'error': error_message}
-            return jsonify(response_data), 400
-
+            # Return a response, for example, a JSON response
+            response_data = {'message': 'Sale submitted successfully'}
+            return jsonify(response_data), 200
 
         except Exception as e:
             # Handle any exceptions and return an error response

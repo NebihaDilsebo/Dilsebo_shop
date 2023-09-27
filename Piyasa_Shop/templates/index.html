@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyasaFashion - Where Style Meets Innovation</title>
+    <title>Sales Data Submission</title>
     <link rel="stylesheet" type="text/css" href="../static/styles/styles.css?cache_id={{ cache_id }}">
     <script src="static/scripts/slider.js"></script> <!-- Include the external JavaScript file -->
 	<script src="static/scripts/search.js"></script> <!-- Add this line to import your JavaScript file -->
@@ -19,12 +19,12 @@
         <nav>
             <ul>
                 <li ><a href="#">Home</a></li>
-                <li><a href="#men">Men</a></li>
-                <li><a href="#women">Women</a></li>
-                <li><a href="#kids">Kids</a></li>
-				<li><a href="#contactUs">Contact Us</a></li>
-                <li><a href="#register">Register</a></li>
-				<li><a href="#login">login</a></li>
+                <li><a href="#men">Goods</a></li>
+                <li><a href="#women">Documents</a></li>
+                <li><a href="#kids">Reports</a></li>
+				<li><a href="#contactUs">Expenses</a></li>
+                <li><a href="#register">New Incoming</a></li>
+				<li><a href="#login">New Outgoing</a></li>
             </ul>
         </nav>
 		
@@ -293,32 +293,37 @@
        </div>
     </section>
 	
-	<!-- section  for Register  -->
-    <section id="register" class="product-section">
-	  <h1>User Registration</h1>
-       <form id="registration-form" action="index.html" method="POST">
-           <label for="firstName">First Name:</label>
-           <input type="text" id="firstName" name="firstName" required>
+	<!-- section  for Sales Data Submission -->
+    <section id="sales-submission" class="product-section">
+        <h1>Sales Data Submission</h1>
+        <form id="Sales-form" action="/submit_Sale" method="POST" enctype="multipart/form-data">
+            <label for="product_id">Product ID:</label>
+            <input type="number" id="product_id" name="product_id" required>
 
-           <label for="lastName">Last Name:</label>
-           <input type="text" id="lastName" name="lastName" required>
+            <label for="customer_id">Customer ID:</label>
+            <input type="number" id="customer_id" name="customer_id" required>
 
-           <label for="email">Email:</label>
-           <input type="email" id="email" name="email" required>
+            <label for="sale_date">Sale Date:</label>
+            <input type="date" id="sale_date" name="sale_date" required>
 
-           <label for="password">Password:</label>
-           <input type="password" id="password" name="password" required>
+            <label for="quantity_sold">Quantity Sold:</label>
+            <input type="number" id="quantity_sold" name="quantity_sold" required>
 
-           <label for="address">Address:</label>
-           <input type="text" id="address" name="address">
+	    <label for="price">Price:</label>
+        <input type="number" step="0.01" id="price" name="price" required>
 
-           <label for="phoneNumber">Phone Number:</label>
-           <input type="tel" id="phoneNumber" name="phoneNumber">
 
-           <input type="submit" value="Register">
-       </form>
+            <label for="total_sale_price">Total Sale Price:</label>
+            <input type="number" step="0.01" id="total_sale_price" name="total_sale_price" required>
+
+	    <input type="file" id="file-input" accept=".json" name="json_file">
+	    <button id="submit-button">Submit</button>
+
+        </form>
     </section>
-	
+
+    <!-- Add any other sections or content as needed -->
+
 	<!-- section  for Login  -->
     <section id="login" class="product-section">
 	<h1>Login</h1>
@@ -337,6 +342,25 @@
     <footer>
         <p>&copy; 2023 PyasaFashion - Where Style Meets Innovation</p>
     </footer>
+
+     <script>
+    function calculateTotalSalePrice() {
+        var price = parseFloat(document.getElementById('price').value);
+        var quantity_sold = parseInt(document.getElementById('quantity_sold').value);
+
+        // Check if both price and quantity_sold are valid numbers
+        if (!isNaN(price) && !isNaN(quantity_sold)) {
+            var total_sale_price = price * quantity_sold;
+            document.getElementById('total_sale_price').value = total_sale_price.toFixed(2); // Round to 2 decimal places
+        }
+    }
+
+    // Call the function when price or quantity_sold input changes
+    document.getElementById('price').addEventListener('input', calculateTotalSalePrice);
+    document.getElementById('quantity_sold').addEventListener('input', calculateTotalSalePrice);
+</script>
+
+
 </body>
 <script src="static/scripts/search.js"></script>
 </html>
