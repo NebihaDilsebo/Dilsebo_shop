@@ -57,18 +57,25 @@ def submit_Sale():
             # Calculate the total sale price
             total_sale_price = quantity_sold * price
 
-                product_id=product_id,
-                customer_id=customer_id,
-                sale_date=sale_date,
-                quantity_sold=quantity_sold,
-                price=price,
-                total_sale_price=total_sale_price
-            )
+            # Create a new instance of the Sales class
+            new_sale = Sales(
+                    product_id=product_id,
+                    customer_id=customer_id,
+                    sale_date=sale_date,
+                    quantity_sold=quantity_sold,
+                    price=price,
+                    total_sale_price=total_sale_price
+                    )
+            # Add the new_sale to the database and commit the changes
             db.session.add(new_sale)
             db.session.commit()
 
              # Retrieve today's sales records
             today_sales = Sales.query.filter_by(sale_date=datetime.now().date()).all()
+
+            # Calculate the sum of today's total sale prices
+            today_total_price = sum(sale.total_sale_price for sale in today_sales)
+
 
             # Convert the sales records to a format you want to display (e.g., JSON)
             sales_data = [{'product_id': sale.product_id, 'customer_id': sale.customer_id, 'sale_date': sale.sale_date.strftime('%Y-%m-%d'), 'quantity_sold': sale.quantity_sold, 'price': sale.price, 'total_sale_price': sale.total_sale_price} for sale in today_sales]

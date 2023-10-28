@@ -1,14 +1,17 @@
+<!-- sales_table.html -->
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1>{{ title }}</h1>
+    <h1>{{ title }}</h1>
+    <div class="sales-table">
         {{ sales | safe }}
+    </div>
+    <div class="summed-total-box">
+        <p><strong>Today's Total Sale Price:</strong> {{ running_total }}</p>
     </div>
 </body>
 </html>
