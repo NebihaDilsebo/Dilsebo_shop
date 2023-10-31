@@ -14,7 +14,6 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
 import pymysql
-import redis
 
 # Connect to your database
 conn = pymysql.connect(host='localhost', user='piyasa_dev', password='piyasa_dev_pwd', database='Dilsebo_shop')
