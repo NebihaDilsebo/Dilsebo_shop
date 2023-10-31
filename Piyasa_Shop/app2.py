@@ -51,6 +51,14 @@ class Sales(db.Model):
     price = db.Column(db.Float)
     total_sale_price = db.Column(db.Float)
 
+class Products(db.Model):
+    __tablename__ = 'Products'
+    product_id = db.Column(db.Integer, primary_key=True)
+    product_name = db.Column(db.String(255))
+    description = db.Column(db.String(255))
+    stock_quantity = db.Column(db.Integer)
+
+
 @app.route('/goods')
 def goods():
     # Execute the SQL query to retrieve product data
@@ -76,6 +84,17 @@ def submit_Sale():
 
             # Calculate the total sale price
             total_sale_price = quantity_sold * price
+
+            # Update the stock quantity
+            product = Products.query.get(product_id)
+            if product:
+                if product.stock_quantity >= quantity_sold:
+                    product.stock_quantity -= quantity_sold
+                    db.session.commit()
+                else:
+                    return "Not enough stock for this product."
+            else:
+                return "Product not found."
 
             # Execute the SQL statement with placeholders
             cursor.execute(
