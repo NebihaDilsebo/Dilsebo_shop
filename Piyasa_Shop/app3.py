@@ -12,6 +12,14 @@ from hashlib import md5
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import create_engine
+import pymysql
+
+# Connect to your database
+conn = pymysql.connect(host='localhost', user='piyasa_dev', password='piyasa_dev_pwd', database='Dilsebo_shop')
+
+# Create a cursor
+cursor = conn.cursor()
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -27,6 +35,9 @@ db_config = {
 # Configure the database URL
 app.config['SQLALCHEMY_DATABASE_URI'] ='mysql://piyasa_dev:piyasa_dev_pwd@localhost/Dilsebo_shop'
 
+# Define db_connection as a global variable
+db_connection = create_engine('mysql://piyasa_dev:piyasa_dev_pwd@localhost/Dilsebo_shop')
+
 # Create the database object
 db = SQLAlchemy(app)
 
@@ -39,6 +50,15 @@ class Sales(db.Model):
     quantity_sold = db.Column(db.Integer)
     price = db.Column(db.Float)
     total_sale_price = db.Column(db.Float)
+
+@app.route('/goods')
+def goods():
+    # Execute the SQL query to retrieve product data
+    query = "SELECT * FROM Products"
+    product_data = pd.read_sql(query, db_connection)
+
+    # Pass the product data to the HTML template
+    return render_template('goods.html', products=product_data)
 
 @app.route('/submit_Sale', methods=['POST'])
 def submit_Sale():
@@ -56,6 +76,13 @@ def submit_Sale():
 
             # Calculate the total sale price
             total_sale_price = quantity_sold * price
+
+            # Execute the SQL statement with placeholders
+            cursor.execute(
+                    "INSERT INTO Sales (product_id, customer_id, sale_date, quantity_sold, price, total_sale_price) "
+    "VALUES (%s, %s, %s, %s, %s, %s)",
+    (product_id, customer_id, sale_date, quantity_sold, price, total_sale_price)
+    )
 
             # Create a new instance of the Sales class
             new_sale = Sales(
